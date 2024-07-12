@@ -41,15 +41,27 @@ app.get('/api/data', (req, res) => {
 
 app.post('/api/data', (req, res) => {
   const { name, description } = req.body;
-  const insertQuery = 'INSERT INTO data(name, description) VALUES (?, ?)';
+  const insertQuery = 'INSERT INTO data (name, description) VALUES (?, ?)';
   connection.query(insertQuery, [name, description], (error, results) => {
     if (error) {
       console.error('Error executing MySQL query:', error);
       res.status(500).json({ error: 'Error adding data' });
     } else {
+      console.log(`Inserted ${results.affectedRows} row(s)`);
       res.status(201).json({ message: 'Data added successfully' });
     }
   });
+});
+
+// Error handling for invalid routes
+app.use((req, res, next) => {
+  res.status(404).json({ error: 'Route not found' });
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error('Internal server error:', err);
+  res.status(500).json({ error: 'Something went wrong' });
 });
 
 // Start server
