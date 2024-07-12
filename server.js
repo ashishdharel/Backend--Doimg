@@ -49,7 +49,8 @@ app.get('/', (req, res) => {
   });
 
   // GET all data
-router.get('/api/data', (req, res) => {
+// Route to handle GET requests to fetch all data
+app.get('/api/data', (req, res) => {
   pool.query('SELECT * FROM data', (error, results) => {
     if (error) {
       console.error('Error fetching data:', error);
@@ -59,6 +60,7 @@ router.get('/api/data', (req, res) => {
     }
   });
 });
+
 
   
 // Start server
