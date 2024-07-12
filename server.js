@@ -2,12 +2,18 @@
 const express = require('express');
 const cors = require('cors');
 const mysql = require('mysql2/promise');
+const bodyParser = require('body-parser');
+const dataRoutes = require('./routes/data');
 
 const app = express();
 const port = 5000;
 
 app.use(cors());
 app.use(express.json());
+app.use(bodyParser.json());
+
+// Routes
+app.use('/api', dataRoutes);
 
 // MySQL Connection Pool
 const pool = mysql.createPool({
