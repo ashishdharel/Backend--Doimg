@@ -11,7 +11,7 @@ app.use(express.json());
 
 // MySQL Connection Pool
 const pool = mysql.createPool({
-  host: '172.31.21.17',
+  host: 'localhost',
   user: 'docker',
   password: 'password',
   database: 'docker',
