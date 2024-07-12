@@ -44,7 +44,7 @@ app.get('/', (req, res) => {
 
   // GET all data
 router.get('/data', (req, res) => {
-  pool.query('SELECT * FROM your_table_name', (error, results) => {
+  pool.query('SELECT * FROM data', (error, results) => {
     if (error) {
       console.error('Error fetching data:', error);
       res.status(500).json({ message: 'Error fetching data' });
