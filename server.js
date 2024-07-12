@@ -11,7 +11,7 @@ app.use(express.json());
 
 // MySQL Connection Pool
 const pool = mysql.createPool({
-  host: '172.31.21.17',
+  host: 'localhost',
   user: 'helloashish',
   password: 'password',
   database: 'hello',
@@ -41,6 +41,19 @@ app.post('/api/data', async (req, res) => {
 app.get('/', (req, res) => {
     res.send('Welcome to my backendd server!');
   });
+
+  // GET all data
+router.get('/data', (req, res) => {
+  pool.query('SELECT * FROM your_table_name', (error, results) => {
+    if (error) {
+      console.error('Error fetching data:', error);
+      res.status(500).json({ message: 'Error fetching data' });
+    } else {
+      res.json(results);
+    }
+  });
+});
+
   
 // Start server
 app.listen(port, () => {
