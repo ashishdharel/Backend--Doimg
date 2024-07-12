@@ -12,9 +12,9 @@ app.use(express.json());
 // MySQL Connection Pool
 const pool = mysql.createPool({
   host: 'localhost',
-  user: 'docker',
+  user: 'helloashish',
   password: 'password',
-  database: 'docker',
+  database: 'hello',
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
