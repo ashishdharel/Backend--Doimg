@@ -49,7 +49,7 @@ app.get('/', (req, res) => {
   });
 
   // GET all data
-router.get('/data', (req, res) => {
+router.get('/api/data', (req, res) => {
   pool.query('SELECT * FROM data', (error, results) => {
     if (error) {
       console.error('Error fetching data:', error);
