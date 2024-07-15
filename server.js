@@ -1,3 +1,4 @@
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -10,26 +11,26 @@ app.use(cors());
 app.use(bodyParser.json());
 
 const db = mysql.createConnection({
-    host: 'localhost',
+    host: '172.31.18.7',
     port: '3306',
-    user: 'helloashish',
-    password: 'password',
-    database: 'new_data'
+    user: 'task',
+    password: 'task',
+    database: 'taskdb' // Your database name
 });
 
 db.connect(err => {
     if (err) {
-        console.error('Error connecting to MySQL:', err);
-        throw err;
+        console.error('Error connecing to MySQL:', err);
+        throw err; // Stop the application if unable to connect to the database
     }
     console.log('Connected to MySQL');
 });
 
-// Insert data into the 'new' table with fields: data and description
+// Insert data into the 'new' table
 app.post('/api/storedata', (req, res) => {
-    const { data, description } = req.body;
-    const sql = 'INSERT INTO new_data (data, description) VALUES (?, ?)';
-    db.query(sql, [data, description], (err, result) => {
+    const { data } = req.body;
+    const sql = 'INSERT INTO new (data) VALUES (?)'; // Insert into 'new' table
+    db.query(sql, [data], (err, result) => {
         if (err) {
             console.error('Error storing data:', err);
             res.status(500).json({ message: 'Error storing data' });
@@ -41,7 +42,7 @@ app.post('/api/storedata', (req, res) => {
 
 // Retrieve all data from the 'new' table
 app.get('/api/getdata', (req, res) => {
-    const sql = 'SELECT * FROM new_data';
+    const sql = 'SELECT * FROM new'; // Select from 'new' table
     db.query(sql, (err, results) => {
         if (err) {
             console.error('Error fetching data:', err);
@@ -55,7 +56,7 @@ app.get('/api/getdata', (req, res) => {
 // Delete data from the 'new' table by ID
 app.delete('/api/deletedata/:id', (req, res) => {
     const { id } = req.params;
-    const sql = 'DELETE FROM new_data WHERE id = ?';
+    const sql = 'DELETE FROM new WHERE id = ?';
     db.query(sql, [id], (err, result) => {
         if (err) {
             console.error('Error deleting data:', err);
