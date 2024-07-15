@@ -10,11 +10,11 @@ app.use(cors());
 app.use(bodyParser.json());
 
 const db = mysql.createConnection({
-    host: 'localhost',
+    host: '13.229.115.49',
     port: '3306',
     user: 'helloashish',
     password: 'password',
-    database: 'hello'
+    database: 'new_data'
 });
 
 db.connect(err => {
@@ -25,7 +25,7 @@ db.connect(err => {
     console.log('Connected to MySQL');
 });
 
-// Insert data into the 'new' table with two fields: data1 and data2
+// Insert data into the 'new' table with fields: data and description
 app.post('/api/storedata', (req, res) => {
     const { data, description } = req.body;
     const sql = 'INSERT INTO new_data (data, description) VALUES (?, ?)';
