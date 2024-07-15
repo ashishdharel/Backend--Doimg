@@ -11,11 +11,11 @@ app.use(cors());
 app.use(bodyParser.json());
 
 const db = mysql.createConnection({
-    host: '172.31.18.7',
+    host: 'local',
     port: '3306',
-    user: 'task',
-    password: 'task',
-    database: 'taskdb' // Your database name
+    user: 'helloashish',
+    password: 'password',
+    database: 'hello' // Your database name
 });
 
 db.connect(err => {
