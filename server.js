@@ -1,4 +1,3 @@
-
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -10,44 +9,67 @@ const port = 5000;
 app.use(cors());
 app.use(bodyParser.json());
 
-const db = mysql.createConnection({
-    host: 'local',
+const pool = mysql.createPool({
+    host: 'localhost',
     port: '3306',
     user: 'helloashish',
     password: 'password',
-    database: 'hello' // Your database name
+    database: 'hello',
 });
 
-db.connect(err => {
+let dbConnected = false;
+
+// Check if MySQL connection is successful
+pool.getConnection((err, connection) => {
     if (err) {
-        console.error('Error connecing to MySQL:', err);
-        throw err; // Stop the application if unable to connect to the database
+        console.error('Error connecting to MySQL:', err);
+        console.error('Server will  continue running without database connection.');
+    } else {
+        console.log('Connected to MySQL');
+        dbConnected = true;
+        // Optionally, you can test a query  here to verify the connection
+        connection.query('SELECT 1', (err, results) => {
+            connection.release(); // Release connection back to the pool
+            if (err) {
+                console.error('Error executing test query:', err);
+                dbConnected = false;
+            } else {
+                console.log('MySQL connection test successful');
+            }
+        });
     }
-    console.log('Connected to MySQL');
 });
 
 // Insert data into the 'new' table
 app.post('/api/storedata', (req, res) => {
+    if (!dbConnected) {
+        return res.status(500).json({ message: 'Database connection is not available' });
+    }
     const { data } = req.body;
-    const sql = 'INSERT INTO new (data) VALUES (?)'; // Insert into 'new' table
-    db.query(sql, [data], (err, result) => {
+    if (!data) {
+        return res.status(400).json({ message: 'Data is required' });
+    }
+    const sql = 'INSERT INTO new (data) VALUES (?)';
+    pool.query(sql, [data], (err, result) => {
         if (err) {
             console.error('Error storing data:', err);
-            res.status(500).json({ message: 'Error storing data' });
-            return;
+            return res.status(500).json({ message: 'Error storing data' });
         }
+        console.log('Data stored successfully');
         res.status(200).json({ message: 'Data stored successfully' });
     });
 });
 
 // Retrieve all data from the 'new' table
 app.get('/api/getdata', (req, res) => {
-    const sql = 'SELECT * FROM new'; // Select from 'new' table
-    db.query(sql, (err, results) => {
+    if (!dbConnected) {
+        return res.status(500).json({ message: 'Database connection is not available' });
+    }
+    const sql = 'SELECT * FROM new';
+    pool.query(sql, (err, results) => {
         if (err) {
             console.error('Error fetching data:', err);
-            res.status(500).json({ message: 'Error fetching data' });
-            return;
+            return res.status(500).json({ message: 'Error fetching data' });
         }
         res.status(200).json(results);
     });
@@ -55,24 +77,39 @@ app.get('/api/getdata', (req, res) => {
 
 // Delete data from the 'new' table by ID
 app.delete('/api/deletedata/:id', (req, res) => {
+    if (!dbConnected) {
+        return res.status(500).json({ message: 'Database connection is not available' });
+    }
     const { id } = req.params;
+    if (!id) {
+        return res.status(400).json({ message: 'ID parameter is required' });
+    }
     const sql = 'DELETE FROM new WHERE id = ?';
-    db.query(sql, [id], (err, result) => {
+    pool.query(sql, [id], (err, result) => {
         if (err) {
             console.error('Error deleting data:', err);
-            res.status(500).json({ message: 'Error deleting data' });
-            return;
+            return res.status(500).json({ message: 'Error deleting data' });
         }
+        console.log('Data deleted successfully');
         res.status(200).json({ message: 'Data deleted successfully' });
     });
 });
 
 // Basic API endpoint to check if the server is running
 app.get('/', (req, res) => {
+    if (!dbConnected) {
+        return res.status(500).send('Backend server is running but cannot connect to the database.');
+    }
     res.send('Backend server is running.');
 });
 
 // Start the server
 app.listen(port, () => {
-    console.log(`Backend server is running on http://ec2ip:${port}`);
+    console.log(`Backend server is running on port ${port}`);
 });
+
+
+
+
+
+
