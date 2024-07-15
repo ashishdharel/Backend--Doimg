@@ -14,22 +14,22 @@ const db = mysql.createConnection({
     port: '3306',
     user: 'helloashish',
     password: 'password',
-    database: 'hello' // Your database namee
+    database: 'hello'
 });
 
 db.connect(err => {
     if (err) {
         console.error('Error connecting to MySQL:', err);
-        throw err; // Stop the application if unable to connect to the database
+        throw err;
     }
     console.log('Connected to MySQL');
 });
 
-// Insert data into the 'new' table
+// Insert data into the 'new' table with two fields: data1 and data2
 app.post('/api/storedata', (req, res) => {
-    const { data } = req.body;
-    const sql = 'INSERT INTO new (data) VALUES (?)'; // Insert into 'new' table
-    db.query(sql, [data], (err, result) => {
+    const { data1, data2 } = req.body;
+    const sql = 'INSERT INTO newdata (data1, data2) VALUES (?, ?)';
+    db.query(sql, [data1, data2], (err, result) => {
         if (err) {
             console.error('Error storing data:', err);
             res.status(500).json({ message: 'Error storing data' });
@@ -41,7 +41,7 @@ app.post('/api/storedata', (req, res) => {
 
 // Retrieve all data from the 'new' table
 app.get('/api/getdata', (req, res) => {
-    const sql = 'SELECT * FROM new'; // Select from 'new' table
+    const sql = 'SELECT * FROM newdata';
     db.query(sql, (err, results) => {
         if (err) {
             console.error('Error fetching data:', err);
@@ -55,7 +55,7 @@ app.get('/api/getdata', (req, res) => {
 // Delete data from the 'new' table by ID
 app.delete('/api/deletedata/:id', (req, res) => {
     const { id } = req.params;
-    const sql = 'DELETE FROM new WHERE id = ?';
+    const sql = 'DELETE FROM newdata WHERE id = ?';
     db.query(sql, [id], (err, result) => {
         if (err) {
             console.error('Error deleting data:', err);
