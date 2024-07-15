@@ -27,9 +27,9 @@ db.connect(err => {
 
 // Insert data into the 'new' table with two fields: data1 and data2
 app.post('/api/storedata', (req, res) => {
-    const { data1, data2 } = req.body;
-    const sql = 'INSERT INTO newdata (data1, data2) VALUES (?, ?)';
-    db.query(sql, [data1, data2], (err, result) => {
+    const { data, description } = req.body;
+    const sql = 'INSERT INTO new_data (data, description) VALUES (?, ?)';
+    db.query(sql, [data, description], (err, result) => {
         if (err) {
             console.error('Error storing data:', err);
             res.status(500).json({ message: 'Error storing data' });
@@ -41,7 +41,7 @@ app.post('/api/storedata', (req, res) => {
 
 // Retrieve all data from the 'new' table
 app.get('/api/getdata', (req, res) => {
-    const sql = 'SELECT * FROM newdata';
+    const sql = 'SELECT * FROM new_data';
     db.query(sql, (err, results) => {
         if (err) {
             console.error('Error fetching data:', err);
@@ -55,7 +55,7 @@ app.get('/api/getdata', (req, res) => {
 // Delete data from the 'new' table by ID
 app.delete('/api/deletedata/:id', (req, res) => {
     const { id } = req.params;
-    const sql = 'DELETE FROM newdata WHERE id = ?';
+    const sql = 'DELETE FROM new_data WHERE id = ?';
     db.query(sql, [id], (err, result) => {
         if (err) {
             console.error('Error deleting data:', err);
