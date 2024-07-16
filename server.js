@@ -105,7 +105,7 @@ app.get('/', (req, res) => {
 
 // Start the server
 app.listen(port, () => {
-    console.log(`Backend server is running on port ${port}`);
+    console.log(`Backend server is running on this port ${port}`);
 });
 
 
