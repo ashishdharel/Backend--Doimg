@@ -10,7 +10,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 const pool = mysql.createPool({
-    host: 'localhost',
+    host: '172.31.19.68',
     port: '3306',
     user: 'helloashish',
     password: 'password',
