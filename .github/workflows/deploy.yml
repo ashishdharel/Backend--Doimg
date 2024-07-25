@@ -96,7 +96,7 @@ jobs:
           port: ${{ secrets.EC2_PORT}}
           script: |
             sudo docker pull 654654282708.dkr.ecr.ap-southeast-1.amazonaws.com/backendapp:latest
-            sudo docker run -d --name backend -p 3000:80 654654282708.dkr.ecr.ap-southeast-1.amazonaws.com/backendapp:latest
+            sudo docker run -d --name backend  --network=host 654654282708.dkr.ecr.ap-southeast-1.amazonaws.com/backendapp:latest
 
 
 
