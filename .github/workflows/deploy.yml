@@ -95,11 +95,6 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           port: ${{ secrets.EC2_PORT}}
           script: |
-            sudo docker pull 654654282708.dkr.ecr.ap-southeast-1.amazonaws.com/backendapp:latest
-            sudo docker stop backend || true
-            sudo docker rm backend || true
-            sudo docker run -d --name backend  --network=host 654654282708.dkr.ecr.ap-southeast-1.amazonaws.com/backendapp:latest
-
-
+           sh bscript.sh
 
 
